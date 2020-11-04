@@ -220,22 +220,6 @@ export default class PostList extends PureComponent {
         showPermalink(this.context.intl, teamName, postId);
     };
 
-    handleRefresh = () => {
-        const {
-            actions,
-            channelId,
-            onRefresh,
-        } = this.props;
-
-        if (channelId) {
-            actions.refreshChannelWithRetry(channelId);
-        }
-
-        if (onRefresh) {
-            onRefresh();
-        }
-    };
-
     handleScroll = (event) => {
         const pageOffsetY = event.nativeEvent.contentOffset.y;
         if (pageOffsetY > 0) {
@@ -473,14 +457,6 @@ export default class PostList extends PureComponent {
             showMoreMessagesButton,
         } = this.props;
 
-        const refreshControl = (
-            <RefreshControl
-                refreshing={refreshing}
-                onRefresh={channelId ? this.handleRefresh : null}
-                colors={[theme.centerChannelColor]}
-                tintColor={theme.centerChannelColor}
-            />);
-
         const hasPostsKey = postIds.length ? 'true' : 'false';
 
         return (
@@ -505,7 +481,6 @@ export default class PostList extends PureComponent {
                     onScroll={this.handleScroll}
                     onScrollToIndexFailed={this.handleScrollToIndexFailed}
                     ref={this.flatListRef}
-                    refreshControl={refreshControl}
                     removeClippedSubviews={false}
                     renderItem={this.renderItem}
                     scrollEventThrottle={60}
