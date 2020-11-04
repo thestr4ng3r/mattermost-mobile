@@ -19,8 +19,6 @@ import ChannelPostList from './channel_post_list';
 
 import ChannelBase, {ClientUpgradeListener} from './channel_base';
 
-let backPressedCount = 0;
-
 export default class ChannelAndroid extends ChannelBase {
     openMainSidebar = () => {
         EventEmitter.emit(NavigationTypes.BLUR_POST_DRAFT);
@@ -31,33 +29,6 @@ export default class ChannelAndroid extends ChannelBase {
         EventEmitter.emit(NavigationTypes.BLUR_POST_DRAFT);
         openSettingsSideMenu();
     };
-
-    componentDidMount() {
-        super.componentDidMount();
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    }
-
-    handleBackPress = () => {
-        if (!backPressedCount && EphemeralStore.getNavigationTopComponentId() === 'Channel') {
-            const {formatMessage} = this.context.intl;
-            backPressedCount++;
-            ToastAndroid.show(formatMessage({
-                id: 'mobile.android.back_handler_exit',
-                defaultMessage: 'Press back again to exit',
-            }), ToastAndroid.SHORT);
-            setTimeout(() => {
-                backPressedCount = 0;
-            }, 2000);
-            return true;
-        }
-        backPressedCount = 0;
-        return false;
-    };
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-    }
 
     render() {
         const {theme} = this.props;
